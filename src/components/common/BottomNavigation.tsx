@@ -1,6 +1,5 @@
-
 import { Link, useLocation } from "react-router-dom";
-import { Home, AlertCircle, Newspaper, FileText, User } from "lucide-react";
+import { Home, AlertCircle, Vote, Newspaper, FileText } from "lucide-react";
 
 export function BottomNavigation() {
   const location = useLocation();
@@ -8,9 +7,9 @@ export function BottomNavigation() {
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
     { icon: AlertCircle, label: "Report", path: "/report" },
+    { icon: Vote, label: "Polls", path: "/polls" },
     { icon: Newspaper, label: "Updates", path: "/updates" },
     { icon: FileText, label: "Bills", path: "/bills" },
-    { icon: User, label: "Profile", path: "/profile" },
   ];
   
   return (

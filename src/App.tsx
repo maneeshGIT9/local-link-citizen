@@ -16,6 +16,7 @@ import ContactsPage from "./pages/ContactsPage";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import PollsPage from "./pages/PollsPage";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => {
             <Route path="/report" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
             <Route path="/report/new" element={<ProtectedRoute><NewReportPage /></ProtectedRoute>} />
             <Route path="/updates" element={<ProtectedRoute><UpdatesPage /></ProtectedRoute>} />
+            <Route path="/polls" element={<ProtectedRoute><PollsPage /></ProtectedRoute>} />
             <Route path="/bills" element={<ProtectedRoute><BillsPage /></ProtectedRoute>} />
             <Route path="/contacts" element={<ProtectedRoute><ContactsPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />

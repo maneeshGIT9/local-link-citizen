@@ -1,4 +1,3 @@
-
 import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -9,8 +8,8 @@ interface AppHeaderProps {
 
 export function AppHeader({ title, showNotification = true }: AppHeaderProps) {
   return (
-    <header className="bg-civic-primary text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10">
-      <h1 className="text-xl font-bold">CivicLink</h1>
+    <header className="bg-primary text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10">
+      <h1 className="text-xl font-bold">WeGov</h1>
       <div className="flex items-center space-x-4">
         {showNotification && (
           <Link to="/notifications" className="text-white relative">
