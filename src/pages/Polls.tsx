@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { poll } from "lucide-react";
+import { PieChart } from "lucide-react";
 
 const Polls = () => {
   const polls = [
@@ -22,7 +22,7 @@ const Polls = () => {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center gap-2 mb-6">
-        <poll className="h-6 w-6 text-[#1D8745]" />
+        <PieChart className="h-6 w-6 text-[#1D8745]" />
         <h1 className="text-2xl font-bold">Community Polls</h1>
       </div>
       <div className="grid gap-6 md:grid-cols-2">
