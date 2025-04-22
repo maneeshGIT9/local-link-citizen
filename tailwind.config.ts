@@ -52,18 +52,6 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-                civic: {
-                    primary: '#0366d6',
-                    secondary: '#28a745',
-                    accent: '#f97316',
-                    muted: '#6c757d',
-                    light: '#f8f9fa',
-                    dark: '#1A1F2C',
-                    success: '#2EA043',
-                    warning: '#f0ad4e',
-                    danger: '#dc3545',
-                    info: '#17a2b8',
-                },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
