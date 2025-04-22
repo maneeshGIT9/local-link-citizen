@@ -26,9 +26,16 @@ export function AppHeader({ title, showNotification = true }: AppHeaderProps) {
 
   return (
     <header className="bg-primary text-white p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-10">
-      <div>
-        <h1 className="text-xl font-bold">WeGov</h1>
-        <p className="text-xs opacity-90">Government of Telangana</p>
+      <div className="flex items-center space-x-4">
+        <img 
+          src="/lovable-uploads/0d9f435f-da50-4fc9-a25f-b708833c7022.png" 
+          alt="WeGov Logo" 
+          className="h-10 w-10 mr-2"
+        />
+        <div>
+          <h1 className="text-xl font-bold">WeGov</h1>
+          <p className="text-xs opacity-90">Government of Telangana</p>
+        </div>
       </div>
       <div className="flex items-center space-x-4">
         {showNotification && (
