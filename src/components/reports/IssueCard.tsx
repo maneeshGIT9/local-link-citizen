@@ -1,5 +1,5 @@
 
-import { Clock } from "lucide-react";
+import { Clock, Phone } from "lucide-react";
 
 export type IssueStatus = "pending" | "inProgress" | "resolved";
 
@@ -11,6 +11,11 @@ export interface Issue {
   date: string;
   description: string;
   location: string;
+  agent?: {
+    name: string;
+    phone: string;
+    arrivalTime: string;
+  };
 }
 
 interface IssueCardProps {
@@ -48,6 +53,25 @@ export function IssueCard({ issue, onClick }: IssueCardProps) {
         <Clock size={14} className="mr-1" />
         <span>{issue.date}</span>
       </div>
+      
+      {issue.agent && issue.status === "inProgress" && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-sm font-medium">Assigned Agent</p>
+          <div className="text-sm text-gray-600">
+            <p>{issue.agent.name}</p>
+            <div className="flex items-center mt-1 space-x-4">
+              <div className="flex items-center">
+                <Phone size={14} className="mr-1" />
+                <span>{issue.agent.phone}</span>
+              </div>
+              <div className="flex items-center">
+                <Clock size={14} className="mr-1" />
+                <span>ETA: {issue.agent.arrivalTime}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

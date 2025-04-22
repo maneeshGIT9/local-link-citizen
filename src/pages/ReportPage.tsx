@@ -10,16 +10,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 export default function ReportPage() {
   const navigate = useNavigate();
   
-  // Mock data - in a real app, this would come from an API
   const [issues] = useState<Issue[]>([
     {
       id: "1",
       title: "Broken Streetlight",
       category: "Streetlight Issues",
-      status: "pending",
+      status: "inProgress",
       date: "Today, 10:30 AM",
       description: "The streetlight near house #42 is not working for the past 3 days, causing safety concerns at night.",
       location: "Main Street, near Park Junction",
+      agent: {
+        name: "Rajesh Kumar",
+        phone: "9876543210",
+        arrivalTime: "Today, 2:30 PM",
+      },
     },
     {
       id: "2",
@@ -29,6 +33,11 @@ export default function ReportPage() {
       date: "Yesterday, 08:15 AM",
       description: "No water supply in Block B since yesterday morning. Multiple households are affected.",
       location: "Block B, Sector 7",
+      agent: {
+        name: "Suresh Reddy",
+        phone: "9876543211",
+        arrivalTime: "Today, 4:00 PM",
+      },
     },
     {
       id: "3",
