@@ -4,48 +4,90 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { PieChart, Vote } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { useVote } from "@/hooks/useVote";
+
+// Define interfaces for our data
+interface PollOption {
+  id: string;
+  text: string;
+  votes: number;
+}
 
 interface Poll {
   id: string;
   title: string;
   description: string;
-  options: {
-    id: string;
-    text: string;
-    votes: number;
-  }[];
+  options: PollOption[];
   totalVotes: number;
   category: string;
+  userVote?: string; // Track user's current vote
 }
 
 export default function PollsPage() {
-  // Mock data - in a real app, this would come from an API
-  const polls: Poll[] = [
-    {
-      id: "1",
-      title: "Street Light Installation",
-      description: "Which areas need street lights the most urgently?",
-      options: [
-        { id: "1", text: "Main Market Area", votes: 45 },
-        { id: "2", text: "Residential Block B", votes: 30 },
-        { id: "3", text: "Park Surroundings", votes: 25 },
-      ],
-      totalVotes: 100,
-      category: "Infrastructure",
-    },
-    {
-      id: "2",
-      title: "Waste Collection Schedule",
-      description: "What's your preferred time for waste collection?",
-      options: [
-        { id: "1", text: "Early Morning (6-8 AM)", votes: 120 },
-        { id: "2", text: "Late Morning (8-10 AM)", votes: 80 },
-        { id: "3", text: "Evening (4-6 PM)", votes: 50 },
-      ],
-      totalVotes: 250,
-      category: "Sanitation",
-    },
-  ];
+  const [polls, setPolls] = useState<Poll[]>([]);
+  const { castVote, isVoting } = useVote();
+  const supabase = createClient(
+    import.meta.env.VITE_SUPABASE_URL!, 
+    import.meta.env.VITE_SUPABASE_ANON_KEY!
+  );
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      // Fetch polls with their options and vote counts
+      const { data: pollsData, error: pollsError } = await supabase
+        .from('polls')
+        .select(`
+          id, 
+          title, 
+          description, 
+          category,
+          poll_options(id, text),
+          votes(option_id)
+        `);
+
+      if (pollsError) {
+        console.error('Error fetching polls:', pollsError);
+        return;
+      }
+
+      // Fetch user's current votes
+      const { data: userVotes, error: votesError } = await supabase
+        .from('votes')
+        .select('poll_id, option_id');
+
+      if (votesError) {
+        console.error('Error fetching user votes:', votesError);
+        return;
+      }
+
+      // Transform the data
+      const transformedPolls: Poll[] = pollsData.map(poll => ({
+        id: poll.id,
+        title: poll.title,
+        description: poll.description,
+        category: poll.category,
+        options: poll.poll_options.map(option => ({
+          id: option.id,
+          text: option.text,
+          votes: poll.votes.filter(vote => vote.option_id === option.id).length
+        })),
+        totalVotes: poll.votes.length,
+        userVote: userVotes?.find(v => v.poll_id === poll.id)?.option_id
+      }));
+
+      setPolls(transformedPolls);
+    };
+
+    fetchPolls();
+  }, []);
+
+  const handleVote = async (pollId: string, optionId: string) => {
+    await castVote(pollId, optionId);
+    // Refetch polls to update vote counts
+    // In a real app, you might want to optimistically update the UI
+  };
 
   return (
     <PageContainer title="Community Polls">
@@ -75,12 +117,22 @@ export default function PollsPage() {
                   <div key={option.id} className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>{option.text}</span>
-                      <span>{Math.round((option.votes / poll.totalVotes) * 100)}%</span>
+                      <span>{poll.totalVotes > 0 
+                        ? Math.round((option.votes / poll.totalVotes) * 100) 
+                        : 0}%</span>
                     </div>
                     <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-primary" 
-                        style={{ width: `${(option.votes / poll.totalVotes) * 100}%` }}
+                        className={`h-full ${
+                          poll.userVote === option.id 
+                            ? 'bg-green-500' 
+                            : 'bg-primary'
+                        }`} 
+                        style={{ 
+                          width: poll.totalVotes > 0 
+                            ? `${(option.votes / poll.totalVotes) * 100}%` 
+                            : '0%' 
+                        }}
                       />
                     </div>
                   </div>
@@ -91,7 +143,19 @@ export default function PollsPage() {
                 Total votes: {poll.totalVotes}
               </div>
               
-              <Button className="mt-4 w-full">Vote Now</Button>
+              <div className="mt-4 space-y-2">
+                {poll.options.map((option) => (
+                  <Button 
+                    key={option.id}
+                    onClick={() => handleVote(poll.id, option.id)}
+                    disabled={isVoting}
+                    variant={poll.userVote === option.id ? 'default' : 'outline'}
+                    className="w-full"
+                  >
+                    {poll.userVote === option.id ? 'Voted' : 'Vote'} for {option.text}
+                  </Button>
+                ))}
+              </div>
             </div>
           ))}
         </TabsContent>
